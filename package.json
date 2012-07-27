@@ -1,0 +1,16 @@
+{
+  "name": "google-oauth",
+  "description": "Simplified OAuth helper for Google API",
+  "homepage": "https://github.com/berryboy/google-oauth",
+  "repository":
+    { "type" : "git",
+      "url" : "https://github.com/berryboy/google-oauth"
+    },
+  "version": "0.0.1",
+  "main": "./GoogleOAuth",
+  "dependencies": {
+    "hat": "0.0.3",
+		"memory-cache":"0.0.2",
+		"oauth":"0.9.7"
+  }
+}
