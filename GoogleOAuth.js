@@ -67,9 +67,40 @@ OAuth.prototype.getGoogleAccessToken = function(params, callback) {
 }
 
 
-util.inherits(OAuth2, oauth.OAuth2);
+var baseSiteUrl = 'https://accounts.google.com/o/oauth2';
+var authorizePath	 = '/auth';
+var accessTokenPath = '/token';
 
+util.inherits(OAuth2, oauth.OAuth2);
 function OAuth2(consumer_key, consumer_secret, callback_url){
-	oauth.OAuth2.call(this,arguments);
+  this.callback_url = callback_url;
+	oauth.OAuth2.call(this, consumer_key, consumer_secret, baseSiteUrl, authorizePath, accessTokenPath);
 }
 
+OAuth2.prototype.getGoogleAuthorizeTokenURL = function(scopes, callback) {
+	
+	if(typeof scopes != 'object' || !scopes.join) throw 'Invalid Argument (scopes)';
+	
+	callback = callback || function(){}
+	
+	var reditectUrl = this.getAuthorizeUrl({ 
+	  scope: scopes.join(' '), 
+	  response_type:'code', 
+	  redirect_uri:this.callback_url});
+  return callback(null, reditectUrl);
+}
+
+OAuth2.prototype.getGoogleAccessToken = function(params, callback) {
+	
+	var code = params.code;
+	callback = callback || function(){}
+	
+	this.getOAuthAccessToken(code,{
+	  grant_type:'authorization_code',
+	  redirect_uri:this.callback_url,
+	},function(err, access_token, refresh_token, results){
+	  console.log(arguments)
+	  if (err) return callback(err,null);
+		return callback(null, access_token, refresh_token);
+	})
+}
