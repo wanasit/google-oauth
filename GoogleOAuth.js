@@ -1,5 +1,4 @@
 
-
 exports.OAuth 	= OAuth;
 exports.OAuth2 	= OAuth2;
 
@@ -12,7 +11,7 @@ var getAccessTokenUrl	 = 'https://www.google.com/accounts/OAuthGetAccessToken';
 var authorizeTokenUrl  = 'https://www.google.com/accounts/OAuthAuthorizeToken';
 
 //Use memory cache to store [randomkey -> oauth_token_secret]
-var cache = require('node-cache');
+var cache = require('memory-cache');
 var CACHE_TIMEOUT = 600000; // 10 MINUTE
 
 //Random-key Generator  https://github.com/substack/node-hat
