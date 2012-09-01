@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/berryboy/google-oauth.png)](http://travis-ci.org/berryboy/google-oauth)
 Google-OAuth
 =======
 
