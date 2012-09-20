@@ -26,8 +26,12 @@ function OAuth(consumer_key, consumer_secret, callback_url){
 	oauth.OAuth.call(this, getRequestTokenUrl, getAccessTokenUrl, consumer_key, consumer_secret, '1.0', callback_url, "HMAC-SHA1");
 }
 
-OAuth.prototype.getGoogleAuthorizeTokenURL = function(scopes, callback) {
+OAuth.prototype.getGoogleAuthorizeTokenURL = function(scopes, callback_url, callback) {
 	
+	if(arguments.length < 3){
+	  callback = callback_url;
+	  callback_url = this.callback_url;
+	}
 	if(typeof scopes != 'object' || !scopes.join) throw 'Invalid Argument (scopes)';
 	
 	callback = callback || function(){}
@@ -77,10 +81,14 @@ function OAuth2(consumer_key, consumer_secret, callback_url){
 	oauth.OAuth2.call(this, consumer_key, consumer_secret, baseSiteUrl, authorizePath, accessTokenPath);
 }
 
-OAuth2.prototype.getGoogleAuthorizeTokenURL = function(scopes, callback) {
+OAuth2.prototype.getGoogleAuthorizeTokenURL = function(scopes, callback_url, callback) {
+	
+	if(arguments.length < 3){
+	  callback = callback_url;
+	  callback_url = this.callback_url;
+	}
 	
 	if(typeof scopes != 'object' || !scopes.join) throw 'Invalid Argument (scopes)';
-	
 	callback = callback || function(){}
 	
 	var reditectUrl = this.getAuthorizeUrl({ 
@@ -99,7 +107,6 @@ OAuth2.prototype.getGoogleAccessToken = function(params, callback) {
 	  grant_type:'authorization_code',
 	  redirect_uri:this.callback_url,
 	},function(err, access_token, refresh_token, results){
-	  console.log(arguments)
 	  if (err) return callback(err,null);
 		return callback(null, access_token, refresh_token);
 	})

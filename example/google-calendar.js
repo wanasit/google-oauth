@@ -2,6 +2,7 @@
 /*
 
   This example is showing how to access google calendar with OAuth (version 2).
+  After successfully login, the example generate a simple webpage that list all of your calendars' name. 
   
   require - express (http://expressjs.com)
           - restler (https://github.com/danwrong/restler)
