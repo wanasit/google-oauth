@@ -1,4 +1,4 @@
-GoogleOAuth
+Google-OAuth
 =======
 
 Simplified OAuth helper for Google APIs
@@ -6,6 +6,7 @@ Simplified OAuth helper for Google APIs
 
 Example
 =======
+
 
 ```javascript
 
@@ -19,7 +20,8 @@ server.get('/authentication', function(req, res){
 
 	if(!req.query.code){
 
-	  //Redirect the user to Authentication From
+	  //Redirect the user to Authentication From,
+	  // Set authentication scope to google calendar api
 	  oauth.getGoogleAuthorizeTokenURL( ['https://www.googleapis.com/auth/calendar'], function(err, redirecUrl) {
   		if(err) return res.send(500,err);
   	  return res.redirect(redirecUrl);
