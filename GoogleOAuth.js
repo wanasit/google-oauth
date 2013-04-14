@@ -80,19 +80,30 @@ function OAuth2(consumer_key, consumer_secret, callback_url){
 	oauth.OAuth2.call(this, consumer_key, consumer_secret, baseSiteUrl, authorizePath, accessTokenPath);
 }
 
-OAuth2.prototype.getGoogleAuthorizeTokenURL = function(scopes, callback_url, callback) {
+OAuth2.prototype.getGoogleAuthorizeTokenURL = function(scopes, opt, callback) {
+
+	var access_type = '';
+	var callback_url = '';
 	
 	if(arguments.length < 3){
-	  callback = callback_url;
+	  callback = opt;
 	  callback_url = this.callback_url;
+	}else{
+		if(typeof opt == 'string'){
+			callback_url = opt;
+		}else{
+			access_type = opt.access_type || '';
+			callback_url = opt.callback_url || this.callback_url;
+		}
 	}
-	
+
 	if(typeof scopes != 'object' || !scopes.join) throw 'Invalid Argument (scopes)';
 	callback = callback || function(){}
 	
 	var reditectUrl = this.getAuthorizeUrl({ 
 	  scope: scopes.join(' '), 
 	  response_type:'code', 
+	  access_type:access_type,
 	  redirect_uri:this.callback_url});
   return callback(null, reditectUrl);
 }
@@ -100,13 +111,21 @@ OAuth2.prototype.getGoogleAuthorizeTokenURL = function(scopes, callback_url, cal
 OAuth2.prototype.getGoogleAccessToken = function(params, callback) {
 	
 	var code = params.code;
+	var grant_type = params.grant_type || 'authorization_code'; // for refresh_token
+
 	callback = callback || function(){}
 	
-	this.getOAuthAccessToken(code,{
-	  grant_type:'authorization_code',
-	  redirect_uri:this.callback_url,
-	},function(err, access_token, refresh_token, results){
+	var tmp_param = {
+		grant_type: grant_type
+	};
+
+	if( grant_type == 'authorization_code')
+		tmp_param['redirect_uri'] = this.callback_url;
+
+
+	this.getOAuthAccessToken(code,tmp_param,function(err, access_token, refresh_token, results){
+	  
 	  if (err) return callback(err,null);
-		return callback(null, access_token, refresh_token);
+		return callback(null, access_token, refresh_token, results);
 	})
 }
